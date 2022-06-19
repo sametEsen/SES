@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SES.Models.ViewModels;
 using SES.Services.Abstract;
 
 namespace SES.Api.Controllers
@@ -13,11 +14,16 @@ namespace SES.Api.Controllers
             kataService = _kataService;
         }
 
-        // POST api/kata
-        [HttpPost]
-        public IActionResult Post([FromBody] int[] seqValues)
+        // POST api/Kata/GetResult
+        [HttpPost("GetResult")]
+        public IActionResult Post(KataRequestModel requestModel)
         {
-            var result = kataService.FindOddNumberTimes(seqValues);
+			if (requestModel == null || requestModel.NumberList == null)
+			{
+                return BadRequest();
+			}
+
+            var result = kataService.FindOddNumberTimes(requestModel.NumberList);
             return Ok(result);
         }
     }
