@@ -1,2 +1,32 @@
-<p>home works!</p>
-<p>{{ result.Message }}</p>
+<div class="container border rounded-lg p-3">
+    <div class="form-row align-items-center mb-6">
+        <form class="form-signin" #form="ngForm" (ngSubmit)="getResult()" novalidate>
+        <mat-card class="example-card">
+            <mat-card-subtitle>SES</mat-card-subtitle>
+            <mat-card-title>Kata Question</mat-card-title>
+            <mat-card-content>
+              <p>Given an array of integers, find the one that appears an odd number of times.</p>
+              <p>There will always be only one integer that appears an odd number of times.</p>
+              <p>Examples</p>
+              <ul>
+                <li>[7] should return 7, because it occurs 1 time (which is odd).</li>
+                <li>[0] should return 0, because it occurs 1 time (which is odd).</li>
+                <li>[1,1,2] should return 2, because it occurs 1 time (which is odd).</li>
+                <li>[0,1,0,1,0] should return 0, because it occurs 3 times (which is odd).</li>
+                <li>[1,2,2,3,3,3,4,3,3,3,2,2,1] should return 4, because it appears 1 time (which is odd).</li>
+              </ul>
+            </mat-card-content>
+            <mat-divider inset></mat-divider>
+            <mat-form-field class="mt-3 example-full-width" appearance="fill">
+                <mat-label>Define your integers with comma</mat-label>
+                <input matInput name="numbers" placeholder="Integer with comma" [(ngModel)]="inputValue">
+            </mat-form-field>
+            <mat-divider inset></mat-divider>
+            <p class="mt-3" *ngIf="result !== undefined && result !== null">{{ result?.message }}</p>
+            <mat-card-actions>
+                <button class="w-10 btn btn-lg btn-primary" type="submit">Get Result</button>
+            </mat-card-actions>
+          </mat-card>
+        </form>
+    </div>
+</div>
