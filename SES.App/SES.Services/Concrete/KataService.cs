@@ -8,6 +8,15 @@ namespace SES.Services.Concrete
 	{
         public ResultModel FindOddNumberTimes(int[] seq)
         {
+            if (seq == null)
+            {
+                return new ResultModel
+                {
+                    Type = ResultModelTypeEnum.ERROR,
+                    Message = "The integer list should be declared!"
+                };
+            }
+
             if (seq.Length == 1)
             {
                 return new ResultModel

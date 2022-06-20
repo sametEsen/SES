@@ -17,7 +17,7 @@ namespace SES.Api.Test
 		}
 
 		[Test]
-		public void FindOddNumberTimes_ShouldResultAreEqualToSuccess()
+		public void FindOddNumberTimes_ShouldResultTypeAreEqualToSuccess()
 		{
 			//Arrange
 			int[] numberList = { 0 };
@@ -36,10 +36,63 @@ namespace SES.Api.Test
 		}
 
 		[Test]
-		public void FindOddNumberTimes_ShouldResultAreEqualToError()
+		public void FindOddNumberTimes_ShouldResultTypeAreEqualToError()
 		{
 			//Arrange
 			var kataRequestModel = new KataRequestModel();
+
+			//Act
+			var result = this.kataService.FindOddNumberTimes(kataRequestModel.NumberList);
+
+			//Assert
+			Assert.AreEqual(ResultModelTypeEnum.ERROR, result.Type);
+		}
+
+		[Test]
+		public void FindOddNumberTimes_ShouldResultAreEqualToNumber()
+		{
+			//Arrange
+			int[] numberList = { 0, 0, 1 };
+			var kataRequestModel = new KataRequestModel
+			{
+				NumberList = numberList
+			};
+
+			//Act
+			var result = this.kataService.FindOddNumberTimes(kataRequestModel.NumberList);
+
+			//Assert
+			Assert.AreEqual(ResultModelTypeEnum.SUCCESS, result.Type);
+			var resultMessage = int.Parse(result.Message.Split('=')[1]);
+			Assert.AreEqual(1, resultMessage);
+		}
+
+		[Test]
+		public void FindOddNumberTimes_ShouldResultTypeAreEqualToWarning()
+		{
+			//Arrange
+			int[] numberList = { 0, 1 };
+			var kataRequestModel = new KataRequestModel
+			{
+				NumberList = numberList
+			};
+
+			//Act
+			var result = this.kataService.FindOddNumberTimes(kataRequestModel.NumberList);
+
+			//Assert
+			Assert.AreEqual(ResultModelTypeEnum.WARNING, result.Type);
+		}
+
+		[Test]
+		public void FindOddNumberTimes_ShouldResultTypeAreEqualToErrorWithoutOddNumber()
+		{
+			//Arrange
+			int[] numberList = { 0, 0, 1, 1 };
+			var kataRequestModel = new KataRequestModel
+			{
+				NumberList = numberList
+			};
 
 			//Act
 			var result = this.kataService.FindOddNumberTimes(kataRequestModel.NumberList);
