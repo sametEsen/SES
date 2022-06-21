@@ -1,19 +1,38 @@
+using Moq;
 using NUnit.Framework;
 using SES.Models.Enumerations;
 using SES.Models.ViewModels;
 using SES.Services.Abstract;
-using SES.Services.Concrete;
 
 namespace SES.Api.Test
 {
 	public class KataServiceTests
 	{
-		private IKataService kataService;
+		private Mock<IKataService> kataServiceMock;
 
 		[SetUp]
 		public void Setup()
 		{
-			this.kataService = new KataService();
+			this.kataServiceMock = new Mock<IKataService>();
+		}
+
+		[Test]
+		public void FindOddNumberTimes_ShouldResultTypeAreEqualToError()
+		{
+			//Arrange
+			var kataRequestModel = new KataRequestModel();
+			var kataResponseModel = new ResultModel
+			{
+				Type = ResultModelTypeEnum.ERROR,
+				Message = "The integer list should be declared!"
+			};
+			this.kataServiceMock.Setup(x => x.FindOddNumberTimes(kataRequestModel.NumberList)).Returns(kataResponseModel);
+
+			//Act
+			var result = this.kataServiceMock.Object.FindOddNumberTimes(kataRequestModel.NumberList);
+
+			//Assert
+			Assert.That(result, Is.EqualTo(kataResponseModel));
 		}
 
 		[Test]
@@ -25,63 +44,18 @@ namespace SES.Api.Test
 			{
 				NumberList = numberList
 			};
-
-			//Act
-			var result = this.kataService.FindOddNumberTimes(kataRequestModel.NumberList);
-
-			//Assert
-			Assert.AreEqual(ResultModelTypeEnum.SUCCESS, result.Type);
-			var resultMessage = int.Parse(result.Message.Split('=')[1]);
-			Assert.AreEqual(0, resultMessage);
-		}
-
-		[Test]
-		public void FindOddNumberTimes_ShouldResultTypeAreEqualToError()
-		{
-			//Arrange
-			var kataRequestModel = new KataRequestModel();
-
-			//Act
-			var result = this.kataService.FindOddNumberTimes(kataRequestModel.NumberList);
-
-			//Assert
-			Assert.AreEqual(ResultModelTypeEnum.ERROR, result.Type);
-		}
-
-		[Test]
-		public void FindOddNumberTimes_ShouldResultAreEqualToNumber()
-		{
-			//Arrange
-			int[] numberList = { 0, 0, 1 };
-			var kataRequestModel = new KataRequestModel
+			var kataResponseModel = new ResultModel
 			{
-				NumberList = numberList
+				Type = ResultModelTypeEnum.SUCCESS,
+				Message = "Result = 0"
 			};
-
+			this.kataServiceMock.Setup(x => x.FindOddNumberTimes(kataRequestModel.NumberList)).Returns(kataResponseModel);
+			
 			//Act
-			var result = this.kataService.FindOddNumberTimes(kataRequestModel.NumberList);
+			var result = this.kataServiceMock.Object.FindOddNumberTimes(kataRequestModel.NumberList);
 
 			//Assert
-			Assert.AreEqual(ResultModelTypeEnum.SUCCESS, result.Type);
-			var resultMessage = int.Parse(result.Message.Split('=')[1]);
-			Assert.AreEqual(1, resultMessage);
-		}
-
-		[Test]
-		public void FindOddNumberTimes_ShouldResultTypeAreEqualToWarning()
-		{
-			//Arrange
-			int[] numberList = { 0, 1 };
-			var kataRequestModel = new KataRequestModel
-			{
-				NumberList = numberList
-			};
-
-			//Act
-			var result = this.kataService.FindOddNumberTimes(kataRequestModel.NumberList);
-
-			//Assert
-			Assert.AreEqual(ResultModelTypeEnum.WARNING, result.Type);
+			Assert.That(result, Is.EqualTo(kataResponseModel));
 		}
 
 		[Test]
@@ -93,12 +67,64 @@ namespace SES.Api.Test
 			{
 				NumberList = numberList
 			};
+			var kataResponseModel = new ResultModel
+			{
+				Type = ResultModelTypeEnum.ERROR,
+				Message = "There has been nothing found odd numbers of times."
+			};
+			this.kataServiceMock.Setup(x => x.FindOddNumberTimes(kataRequestModel.NumberList)).Returns(kataResponseModel);
 
 			//Act
-			var result = this.kataService.FindOddNumberTimes(kataRequestModel.NumberList);
+			var result = this.kataServiceMock.Object.FindOddNumberTimes(kataRequestModel.NumberList);
 
 			//Assert
-			Assert.AreEqual(ResultModelTypeEnum.ERROR, result.Type);
+			Assert.That(result, Is.EqualTo(kataResponseModel));
+		}
+
+		[Test]
+		public void FindOddNumberTimes_ShouldResultTypeAreEqualToWarning()
+		{
+			//Arrange
+			int[] numberList = { 0, 1 };
+			var kataRequestModel = new KataRequestModel
+			{
+				NumberList = numberList
+			};
+			var kataResponseModel = new ResultModel
+			{
+				Type = ResultModelTypeEnum.WARNING,
+				Message = "There has been found more then one results -> 0, 1"
+			};
+			this.kataServiceMock.Setup(x => x.FindOddNumberTimes(kataRequestModel.NumberList)).Returns(kataResponseModel);
+
+			//Act
+			var result = this.kataServiceMock.Object.FindOddNumberTimes(kataRequestModel.NumberList);
+
+			//Assert
+			Assert.That(result, Is.EqualTo(kataResponseModel));
+		}
+
+		[Test]
+		public void FindOddNumberTimes_ShouldResultAreEqualToNumber()
+		{
+			//Arrange
+			int[] numberList = { 0, 0, 1 };
+			var kataRequestModel = new KataRequestModel
+			{
+				NumberList = numberList
+			};
+			var kataResponseModel = new ResultModel
+			{
+				Type = ResultModelTypeEnum.SUCCESS,
+				Message = "Result = 1"
+			};
+			this.kataServiceMock.Setup(x => x.FindOddNumberTimes(kataRequestModel.NumberList)).Returns(kataResponseModel);
+
+			//Act
+			var result = this.kataServiceMock.Object.FindOddNumberTimes(kataRequestModel.NumberList);
+
+			//Assert
+			Assert.That(result, Is.EqualTo(kataResponseModel));
 		}
 	}
 }
